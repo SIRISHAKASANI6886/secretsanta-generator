@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'NEXUS_REPO', defaultValue: '', description: 'Example:	maven-snapshots')
+        string(name: 'GROUP_ID', defaultValue: '', description: 'Example:com.notthebest')
+        string(name: 'ARTIFACT_ID', defaultValue: '', description: 'Example:secretsanta ')
+        string(name: 'VERSION', defaultValue: '', description: 'Example:0.0.1-20250722.181043-1 ')
+    }
+
+    stages {
+        stage(' Download artifact') {
+            steps {
+                script {
+                    def nexusUrl = "http://192.168.31.70:8081/repository/${params.NEXUS_REPO}"
+                    def artifactPath = "${params.GROUP_ID.replace('.', '/')}/${params.ARTIFACT_ID}/${params.VERSION}/${params.ARTIFACT_ID}-${params.VERSION}.jar"
+                    def downloadUrl = "${nexusUrl}/${artifactPath}"
+
+                    
+                    echo "Downloading from: ${downloadUrl}"
+                }
+            }
+        }
+    }
+}
